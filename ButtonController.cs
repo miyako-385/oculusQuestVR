@@ -9,7 +9,12 @@ public class ButtonController : MonoBehaviour
     public GameObject Ice;
     public GameObject RShootPosition;
     public GameObject LShootPosition;
-    public float shootSpeed = 1f;
+
+    GameObject[] tagObjectFire;
+    GameObject[] tagObjectIce;
+
+    public float shootSpeed = 1000f;
+    public float shootInterval = 1.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -21,8 +26,8 @@ public class ButtonController : MonoBehaviour
     void FixedUpdate()
     {
         OnBoard();
-        ShootFire();
-        ShootIce();
+        ShootFire("Fire");
+        ShootIce("Ice");
 
     }
 
@@ -34,25 +39,27 @@ public class ButtonController : MonoBehaviour
         
     }
 
-    void ShootFire(){
-        if(OVRInput.Get(OVRInput.Axis1D.SecondaryHandTrigger) > 0.999){
+    void ShootFire(string tagname){
+        tagObjectFire = GameObject.FindGameObjectsWithTag(tagname);//シーン上のtagnameタグがついたオブジェクトを数える
+        if(OVRInput.Get(OVRInput.Button.SecondaryHandTrigger) && tagObjectFire.Length == 0){
             GameObject FireInstance = Instantiate<GameObject>(Fire);
             FireInstance.transform.rotation = RShootPosition.transform.rotation;//オブジェクトと発射点の回転をあわせている
             FireInstance.transform.Rotate(0, -90f, 0);//オブジェクトの回転を先端が発射方向に向くように調整している
             FireInstance.transform.position = RShootPosition.transform.position;//オブジェクトと発射点の座標を合わせている
             FireInstance.GetComponent<Rigidbody> ().AddForce(RShootPosition.transform.forward * shootSpeed);
-            Destroy(FireInstance, 1.0f);
+            Destroy(FireInstance, shootInterval);
         }
     }
 
-    void ShootIce(){
-        if(OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger) > 0.999){
+    void ShootIce(string tagname){
+        tagObjectIce = GameObject.FindGameObjectsWithTag(tagname);//シーン上のtagnameタグがついたオブジェクトを数える
+        if(OVRInput.Get(OVRInput.Button.PrimaryHandTrigger) && tagObjectIce.Length == 0){
             GameObject IceInstance = Instantiate<GameObject>(Ice);
             IceInstance.transform.rotation = LShootPosition.transform.rotation;//オブジェクトと発射点の回転をあわせている
             IceInstance.transform.Rotate(0, -90f, 0);//オブジェクトの回転を先端が発射方向に向くように調整している
             IceInstance.transform.position = LShootPosition.transform.position;//オブジェクトと発射点の座標を合わせている
             IceInstance.GetComponent<Rigidbody> ().AddForce(LShootPosition.transform.forward * shootSpeed);
-            Destroy(IceInstance, 1.0f);
+            Destroy(IceInstance, shootInterval);
         }
     }
 }
