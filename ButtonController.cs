@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ButtonController : MonoBehaviour
 {
+    
     public GameObject Board;
     public GameObject Fire;
     public GameObject Ice;
@@ -13,13 +14,15 @@ public class ButtonController : MonoBehaviour
     GameObject[] tagObjectFire;
     GameObject[] tagObjectIce;
 
+    GameObject UIManager;
+
     public float shootSpeed = 1000f;
     public float shootInterval = 1.0f;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        this.UIManager = GameObject.Find("UIManager");
     }
 
     // Update is called once per frame
@@ -43,6 +46,7 @@ public class ButtonController : MonoBehaviour
         tagObjectFire = GameObject.FindGameObjectsWithTag(tagname);//シーン上のtagnameタグがついたオブジェクトを数える
         if(OVRInput.Get(OVRInput.Button.SecondaryHandTrigger) && tagObjectFire.Length == 0){
             GameObject FireInstance = Instantiate<GameObject>(Fire);
+            FireInstance.GetComponent<AudioSource>().Play();//発射したときのSE再生
             FireInstance.transform.rotation = RShootPosition.transform.rotation;//オブジェクトと発射点の回転をあわせている
             FireInstance.transform.Rotate(0, -90f, 0);//オブジェクトの回転を先端が発射方向に向くように調整している
             FireInstance.transform.position = RShootPosition.transform.position;//オブジェクトと発射点の座標を合わせている
@@ -55,6 +59,7 @@ public class ButtonController : MonoBehaviour
         tagObjectIce = GameObject.FindGameObjectsWithTag(tagname);//シーン上のtagnameタグがついたオブジェクトを数える
         if(OVRInput.Get(OVRInput.Button.PrimaryHandTrigger) && tagObjectIce.Length == 0){
             GameObject IceInstance = Instantiate<GameObject>(Ice);
+            IceInstance.GetComponent<AudioSource>().Play();//発射したときのSE再生
             IceInstance.transform.rotation = LShootPosition.transform.rotation;//オブジェクトと発射点の回転をあわせている
             IceInstance.transform.Rotate(0, -90f, 0);//オブジェクトの回転を先端が発射方向に向くように調整している
             IceInstance.transform.position = LShootPosition.transform.position;//オブジェクトと発射点の座標を合わせている
